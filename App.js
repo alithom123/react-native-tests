@@ -1,10 +1,11 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
-import { Camera } from "expo-camera";
+// import { Camera } from "expo-camera";
+import { RNCamera } from "react-native-camera";
 // const hbjs = require("handbrake-js");
-import MovToMp4 from "react-native-mov-to-mp4";
-// import { LogLevel, RNFFmpeg } from "react-native-ffmpeg";
+// import MovToMp4 from "./react-native-mov-to-mp4";
+import { LogLevel, RNFFmpeg } from "react-native-ffmpeg";
 
 export default function App() {
   const [cameraOpen, setCameraOpen] = useState(false);
@@ -26,11 +27,18 @@ export default function App() {
       const video = await camera.recordAsync({ maxDuration: 5 });
       console.log(`video`, video.uri);
 
-      MovToMp4.convertMovToMp4(video.uri, filename + ".mp4").then(function (
-        results
-      ) {
-        console.log(results);
-      });
+      // RNFFmpeg.execute('-i file1.mp4 -c:v mpeg4 file2.mp4').then(result => console.log("FFmpeg process exited with rc " + result.rc));
+      RNFFmpeg.execute(`-i ${video.uri} file2.mp4`).then((result) =>
+        console.log("FFmpeg process exited with rc " + result.rc)
+      );
+
+      // MovToMp4.convertMovToMp4(video.uri, filename + ".mp4")
+      //   .then(function (results) {
+      //     console.log("===============>", results);
+      //   })
+      //   .catch((err) => {
+      //     console.log("=====>error", err);
+      //   });
 
       /*       hbjs
         .spawn({ input: `${video.uri}`, output: "something.m4v" })
@@ -44,11 +52,6 @@ export default function App() {
             progress.eta
           );
         }); */
-
-      // RNFFmpeg.execute('-i file1.mp4 -c:v mpeg4 file2.mp4').then(result => console.log("FFmpeg process exited with rc " + result.rc));
-      // RNFFmpeg.execute(`-i ${video.uri} file2.mp4`).then((result) =>
-      //   console.log("FFmpeg process exited with rc " + result.rc)
-      // );
 
       // const convertedVideo = await converter.convertMovToMp4(
       //   video.uri,
