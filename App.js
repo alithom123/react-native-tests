@@ -20,7 +20,7 @@ export default function App() {
   }, []);
 
   const onClickVideo = async () => {
-    console.log(`cameraRef`, cameraRef);
+    console.log(`===>>>cameraRef`, cameraRef);
     const camera = cameraRef.current;
     if (camera) {
       const filename = Date.now().toString();
@@ -28,7 +28,9 @@ export default function App() {
       console.log(`video`, video.uri);
 
       // RNFFmpeg.execute('-i file1.mp4 -c:v mpeg4 file2.mp4').then(result => console.log("FFmpeg process exited with rc " + result.rc));
-      RNFFmpeg.execute(`-i ${video.uri} file2.mp4`).then((result) =>
+      RNFFmpeg.execute(
+        `-i file_example_MOV_480_700kB.mov file2.mp4`
+      ).then((result) =>
         console.log("FFmpeg process exited with rc " + result.rc)
       );
 
@@ -68,10 +70,10 @@ export default function App() {
     <View style={{ flex: 1 }}>
       {cameraOpen ? (
         <View style={{ flex: 1 }}>
-          <Camera
-            ref={cameraRef}
-            style={{ flex: 1 }}
-            type={Camera.Constants.Type.back}
+          <RNCamera
+            ref={(ref) => {
+              this.camera = ref;
+            }}
           >
             <View
               style={{
@@ -109,7 +111,7 @@ export default function App() {
                 }}
               ></TouchableOpacity>
             </View>
-          </Camera>
+          </RNCamera>
         </View>
       ) : (
         <View style={styles.container}>
